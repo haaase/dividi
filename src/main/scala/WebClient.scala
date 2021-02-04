@@ -1,6 +1,7 @@
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSImport
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.async.Async.{async, await}
 
 @js.native
 @JSImport("libp2p", JSImport.Default)
@@ -49,23 +50,24 @@ object WebClient {
     println(txt)
     output.textContent = output.textContent + s"$txt\n"
   }
-  def main(args: Array[String]): Unit = {
 
-    Libp2p.create(js.Dynamic.literal(
-      addresses = js.Dynamic.literal(
-        listen = js.Array("/dns4/signaling.dividi.xyz/tcp/443/wss/p2p-webrtc-star/")
-      ),
-      modules = js.Dynamic.literal(
-        transport = js.Array(Websockets, WebRTCStar),
-        connEncryption = js.Array(NOISE),
-        streamMuxer = js.Array(Mplex)
-      )
-    )).toFuture.foreach(libp2p => {
-      libp2p.start().toFuture.foreach(_ => {
-        window.libp2p = libp2p
-        status.innerText = "libp2p started!"
-        log(s"libp2p id is ${libp2p.peerId.toB58String()}")
-      })
-    })
+  def main(args: Array[String]): Unit = {
+    async{
+      val libp2p: libp2pObj = await(Libp2p.create(js.Dynamic.literal(
+        addresses = js.Dynamic.literal(
+          listen = js.Array("/dns4/signaling.dividi.xyz/tcp/443/wss/p2p-webrtc-star/")
+        ),
+        modules = js.Dynamic.literal(
+          transport = js.Array(Websockets, WebRTCStar),
+          connEncryption = js.Array(NOISE),
+          streamMuxer = js.Array(Mplex)
+        )
+      )).toFuture)
+
+      await(libp2p.start().toFuture)
+      window.libp2p = libp2p
+      status.innerText = "libp2p started!"
+      log(s"libp2p id is ${libp2p.peerId.toB58String()}")
+    }
   }
 }

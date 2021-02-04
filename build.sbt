@@ -5,9 +5,13 @@ version := "0.1"
 scalaVersion := "2.13.4"
 
 enablePlugins(ScalaJSBundlerPlugin)
-
 // This is an application with a main method
 scalaJSUseMainModuleInitializer := true
+
+// scala-async
+libraryDependencies += "org.scala-lang.modules" %% "scala-async" % "0.10.0"
+libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value % Provided
+scalacOptions += "-Xasync"
 
 // npm dependencies
 useYarn := true
