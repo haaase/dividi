@@ -27,11 +27,16 @@ npmDependencies in Compile ++= Seq(
   "libp2p-webrtc-star" -> "^0.21.2",
   "libp2p-websockets" -> "^0.15.6"
 )
+// dependabot alerts
 additionalNpmConfig in Compile ++= Map(
   "resolutions" -> obj(
     // force netmask upgrade due to https://github.com/advisories/GHSA-pch5-whg9-qr2r
     "netmask" -> str("^2.0.2"),
     // force upgrade due to https://github.com/advisories/GHSA-p9pc-299p-vxgp
-    "yargs-parser" -> str("^13.1.2")
+    "yargs-parser" -> str("^13.1.2"),
+    // force upgrade due to https://github.com/advisories/GHSA-c9g6-9335-x697
+    "sockjs" -> str("^0.3.20"),
+    // https://github.com/advisories/GHSA-vx3p-948g-6vhq
+    "ssri" -> str("^6.0.2")
   )
 )
