@@ -1,3 +1,5 @@
+import scalajsbundler.util.JSON._
+
 name := "dividi"
 
 version := "0.1"
@@ -15,7 +17,6 @@ scalacOptions += "-Xasync"
 
 // npm dependencies
 useYarn := true
-//npmDependencies in Compile += "libp2p" -> "^0.29.0"
 npmDependencies in Compile ++= Seq(
   "babel-polyfill" -> "^6.26.0",
   "libp2p" -> "^0.30.12",
@@ -25,4 +26,12 @@ npmDependencies in Compile ++= Seq(
   "libp2p-noise" -> "^2.0.5",
   "libp2p-webrtc-star" -> "^0.21.2",
   "libp2p-websockets" -> "^0.15.6"
+)
+additionalNpmConfig in Compile ++= Map(
+  "resolutions" -> obj(
+    // force netmask upgrade due to https://github.com/advisories/GHSA-pch5-whg9-qr2r
+    "netmask" -> str("^2.0.2"),
+    // force upgrade due to https://github.com/advisories/GHSA-p9pc-299p-vxgp
+    "yargs-parser" -> str("^13.1.2")
+  )
 )
